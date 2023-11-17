@@ -1,5 +1,5 @@
 import argparse
-from exp import Exp
+from core import core
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -42,8 +42,8 @@ def create_parser():
 if __name__ == '__main__':
     args = create_parser().parse_args()
     config = args.__dict__
-    exp = Exp(args)
+    core = core(args)
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>  start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    exp.train(args)
+    core.train(args)
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>> testing <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
-    mse = exp.test(args)
+    mse = core.test(args)

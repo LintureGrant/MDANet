@@ -9,9 +9,9 @@ from thop import profile
 import torch.distributed
 from torch import optim
 
-class Exp:
+class core:
     def __init__(self, args):
-        super(Exp, self).__init__()
+        super(core, self).__init__()
         self.args = args
         self.config = self.args.__dict__
         self.device = self._acquire_device()
