@@ -1,20 +1,12 @@
 import os
 import os.path as osp
 import json
-import torch
-import pickle
-import logging
-import numpy as np
 from model_MD import MDANet
 from tqdm import tqdm
 from API import *
 from utils import *
-import torch.nn as nn
-import math
-import matplotlib.pyplot as plt
 from thop import profile
 import torch.distributed
-from timm.utils.agc import adaptive_clip_grad
 from torch import optim
 
 class Exp:
@@ -66,19 +58,17 @@ class Exp:
         args = self.args
         self.model = MDANet(shape_in=tuple(args.in_shape),
                             shape_out=tuple(args.out_shape),
-                            hid_S=args.hid_S,
-                            hid_T=args.hid_T,
-                            N_S=args.N_S,
+                            hid_channel=args.hid_channel,
+                            layer_num=args.layer_num,
                             kernel_size=tuple(args.kernel_size),
-                            N_T=args.N_T,
-                            rednet_deep=args.rednet_deep,
                             layer_config=tuple(args.layer_config),
-                            groups=args.groups).to(self.device)
+                            reduction=args.reduction,
+                            group_param=tuple(args.group_param)).to(self.device)
         input = torch.randn(16, 10, 1, 64, 64).to("cuda")
         flops, params = profile(self.model, inputs=(input,))
         print('flops:', flops)
         print('params:', params)
-        self.model.load_state_dict(torch.load(self.path + '/' + '600.pth')['net'], strict=False)
+        # self.model.load_state_dict(torch.load(self.path + '/' + '600.pth')['net'], strict=False)
 
     def _get_data(self):
         config = self.args.__dict__

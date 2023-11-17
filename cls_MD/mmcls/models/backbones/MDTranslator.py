@@ -1,20 +1,14 @@
 import torch.nn as nn
-import torch.utils.checkpoint as cp
 from mmcv.cnn import (ConvModule, build_conv_layer, build_norm_layer,
                       constant_init, kaiming_init)
 from mmcv.utils.parrots_wrapper import _BatchNorm
 
 from ..builder import BACKBONES
 from .base_backbone import BaseBackbone
-from ..utils.involution_cuda import involution, My_involution
-from ..utils.involution_cuda import _involution_cuda
-import numpy as np
 import torch
-from einops import rearrange
-from torch.nn import functional as F
 from timm.models.layers import DropPath, trunc_normal_
 import math
-#from self_attention_cv.bottleneck_transformer import BottleneckBlock
+
 
 
 class Mlp(nn.Module):
@@ -79,7 +73,7 @@ class MDA_MLP(nn.Module):
         a = self.MLP_h(a).reshape(B, 1, W, C)
         b = self.MLP_w(b).reshape(B, H, 1, C)
 
-        x = h * (b.expand_as(h)) + w * ( a.expand_as(w)) + (c * (a + b))
+        x = h * (b.expand_as(h)) + w * (a.expand_as(w)) + (c * (a + b))
 
         x = (x).permute(0, 3, 2, 1)
 
