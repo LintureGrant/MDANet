@@ -1,18 +1,63 @@
 # Motion Direction Awareness: A Biomimetic Dynamic Capture Mechanism for Video Prediction
-## 二级标题
+![GitHub stars](https://img.shields.io/github/stars/LintureGrant/MDANet)  ![GitHub forks](https://img.shields.io/github/forks/LintureGrant/MDANet?color=green) 
+
+This repository contains the implementation code for paper:
+
+__Motion Direction Awareness: A Biomimetic Dynamic Capture Mechanism for Video Prediction__
+
+## Introduction
+
+![MDANet](/img/overview.png)
 
 
-这是代码块的示例：
-```python
-import "fmt"
+MDANet contains an MLP-like temporal module, presenting a new paradigm for efficient video prediction. 
 
-def main() {
-	fmt.Println("Hello, world. 你好，世界！ ")
-}
+## Over view
+
+* `API/` contains dataloaders and metrics.
+* `cls_MD/` is the impliment of MD-Translator.
+* `model_MD.py` contains the MDANet model.
+* `run.py` is the executable python file with possible arguments.
+* `main.py` is the core file for training, validating, and testing pipelines.
+
+## Preparation
+
+### Environment install
+We provide the environment requirements file for easy reproduction:
 ```
-下面是图片示例：
+  conda create -n MDANet python=3.7
+  conda activate MDANet
 
-MDANet:
+  pip install -r requirements.txt
+```
+### Dataset download
+
+Our model has been experimented on the following four datasets:
+* [Moving MNIST](http://www.cs.toronto.edu/~nitish/unsupervised_video/)
+* [KTH](https://www.csc.kth.se/cvap/actions/)
+* [Human3.6M](http://vision.imar.ro/human3.6m/description.php) 
+* [WeatherBench](https://github.com/pangeo-data/WeatherBench)
+
+We provide a download script for the mm dataset:
+
+```
+  cd ./data/moving_mnist
+  bash download_mmnist.sh 
+```
+
+### Model traning
+
+This example provide the detail implimentation on Moving MNIST, you can easliy reproduce our work using the following command:
+
+```
+conda activate MDANet
+python run.py             
+```
+Please note that __the model traning must strictly adhere to the hyperparameter settings provided in our paper__; otherwise, reproducibility may not be guaranteed.
+
+## Result：
+
+MDANet predicts more accurate actions with less motion blurring compared to other models. Here are some qualitative visualization examples on KTH dataset:
 
 ![MDANet](/img/mda.gif "Magic Gardens")
 
