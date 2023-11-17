@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from modules_MD import ConvSC
-from cls_MD.mmcls.models.backbones import rednet
+from cls_MD.mmcls.models.backbones import MDATranslator
 
 import torch.nn.functional as F
 
@@ -81,14 +81,12 @@ class Decoder(nn.Module):
         return Y
 
 
-class MDTranslator(nn.Module):
+class MDAT(nn.Module):
     def __init__(self, channel_in, channel_hid, N_S, incep_ker=[3, 5, 7, 11], groups=8, rednet_deep=26,
                  layer_config=(2, 8, 2, 8)):  
-        super(MDTranslator, self).__init__()
+        super(MDAT, self).__init__()
         print(groups)
-        self.net = rednet.RedNet(depth=rednet_deep, layer_config=layer_config, in_channels=channel_in,
-                                 stem_channels=channel_in, base_channels=channel_in // groups, num_stages=N_S,
-                                 expansion=groups).to("cuda")
+        self.net = MDATranslator(layers=N_S, layer_config=layer_config, in_channels=channel_in, reduction=groups, data_size=64, g1=2, g2=4).to("cuda")
         self.channel_in = channel_in  
 
 
@@ -115,7 +113,7 @@ class MDANet(nn.Module):
 
 
         self.enc = Encoder(C, hid_S, N_S, kernel_size)
-        self.MDTranslator = MDTranslator(T * hid_S, hid_T, N_S, incep_ker, groups, rednet_deep, layer_config)
+        self.MDTranslator = MDAT(T * hid_S, hid_T, N_S, incep_ker, groups, rednet_deep, layer_config)
         self.dec = Decoder(hid_S, self.C_out, T, self.T_out, N_S, kernel_size)
 
 

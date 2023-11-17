@@ -64,7 +64,7 @@ class Exp:
 
     def _build_model(self):
         args = self.args
-        self.model = MDANet( shape_in=tuple(args.in_shape),
+        self.model = MDANet(shape_in=tuple(args.in_shape),
                             shape_out=tuple(args.out_shape),
                             hid_S=args.hid_S,
                             hid_T=args.hid_T,

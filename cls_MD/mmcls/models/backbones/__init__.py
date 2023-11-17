@@ -12,7 +12,7 @@
 # from .shufflenet_v1 import ShuffleNetV1
 # from .shufflenet_v2 import ShuffleNetV2
 # from .vgg import VGG
-from .rednet import RedNet
+from .MDTranslator import MDATranslator
 
 __all__ = [
     'LeNet5', 'AlexNet', 'VGG', 'RegNet', 'ResNet', 'ResNeXt', 'ResNetV1d',
