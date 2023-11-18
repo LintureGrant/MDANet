@@ -9,18 +9,11 @@ import torch.utils.data as data
 
 def load_mnist(root):
     # Load MNIST dataset for generating training data.
-    ##以下代码是在本地跑时采用的代码##
     path = os.path.join(root, 'moving_mnist/train-images-idx3-ubyte.gz')
     with gzip.open(path, 'rb') as f:
         mnist = np.frombuffer(f.read(), np.uint8, offset=16)
         mnist = mnist.reshape(-1, 28, 28)
 
-
-    ##以下代码是在kaggle上跑是采用的代码##
-    # path = os.path.join(root, 'moving_mnist/train-images.idx3-ubyte')
-    # with open(path, 'rb') as f:
-    #     mnist = np.frombuffer(f.read(), np.uint8, offset=16)
-    #     mnist = mnist.reshape(-1, 28, 28)
     return mnist
 
 

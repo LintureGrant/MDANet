@@ -33,15 +33,13 @@ class Mlp(nn.Module):
 
 
 class MDA_MLP(nn.Module):
-    def __init__(self, dim, c_dim, len_sequence, segment_dim=8, input_size=64, qkv_bias=False, qk_scale=None, attn_drop=0.,
-                 proj_drop=0.):
+    def __init__(self, dim, c_dim, segment_dim=8, bias=False):
         super().__init__()
         self.segment_dim = segment_dim
-        self.T = len_sequence
-        self.ratio = (self.T - 1) / 2
-        self.mlp_c = nn.Linear(c_dim, c_dim, bias=qkv_bias)
-        self.mlp_h = nn.Linear(dim, dim, bias=qkv_bias)
-        self.mlp_w = nn.Linear(dim, dim, bias=qkv_bias)
+
+        self.mlp_c = nn.Linear(c_dim, c_dim, bias=bias)
+        self.mlp_h = nn.Linear(dim, dim, bias=bias)
+        self.mlp_w = nn.Linear(dim, dim, bias=bias)
 
         self.MLP_h = Mlp(c_dim, c_dim // 4, c_dim)
         self.MLP_w = Mlp(c_dim, c_dim // 4, c_dim)
@@ -51,9 +49,9 @@ class MDA_MLP(nn.Module):
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
-
+        # input: B, C, H, W
         x = x.permute(0, 3, 2, 1)
-
+        # B, H, W, C
         B, H, W, C = x.shape
 
         x = self.norm1(x)
@@ -67,16 +65,16 @@ class MDA_MLP(nn.Module):
 
         c = self.mlp_c(x)
 
-        a = (h).mean(1)
-        b = (w).mean(2)
+        a = h.mean(1)  # average on H-dimension
+        b = w.mean(2)  # average on W-dimension
 
         a = self.MLP_h(a).reshape(B, 1, W, C)
         b = self.MLP_w(b).reshape(B, H, 1, C)
 
-        x = h * (b.expand_as(h)) + w * (a.expand_as(w)) + (c * (a + b))
+        x = h * (b.expand_as(h)) + w * (a.expand_as(w)) + (c * (a + b))  # B, H, W, C
 
-        x = (x).permute(0, 3, 2, 1)
-
+        x = x.permute(0, 3, 2, 1)
+        # B, C, H, W
         return x
 
 
@@ -146,52 +144,53 @@ class MDAUnit(nn.Module):
         # *******************************************************************
 
 
-        if self.feature_count == 0:
+        if self.feature_count == 0:  # Layer 1
 
             seg_dim = g1
             input_size = data_size
             dim = self.mid_channels * input_size // seg_dim
-            self.atten = MDA_MLP(dim=dim, c_dim= self.mid_channels, len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
+            self.MDA_slow = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
             seg_dim = g2
             input_size = data_size
             dim = self.mid_channels * input_size // seg_dim
-            self.conv2 = MDA_MLP(dim=dim, c_dim= self.mid_channels, len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
-        elif self.feature_count == 1:
+            self.MDA_fast = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
+
+        elif self.feature_count == 1:  # Layer 2
 
             seg_dim = g1
             input_size = data_size // 2
             dim = self.mid_channels * input_size // seg_dim
-            self.atten = MDA_MLP(dim=dim, c_dim= self.mid_channels,len_sequence = 10,segment_dim=seg_dim, input_size=input_size)
+            self.MDA_slow = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
             seg_dim = g2
             input_size = data_size // 2
             dim = self.mid_channels * input_size // seg_dim
-            self.conv2 = MDA_MLP(dim=dim, c_dim= self.mid_channels, len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
+            self.MDA_fast = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
-        elif self.feature_count == 2:
+        elif self.feature_count == 2:  # Layer 3
 
             seg_dim = g1
             input_size = data_size // 2
             dim = self.mid_channels * input_size // seg_dim
-            self.atten = MDA_MLP(dim=dim, c_dim= self.mid_channels,len_sequence = 10,segment_dim=seg_dim, input_size=input_size)
+            self.MDA_slow = MDA_MLP(dim=dim, c_dim= self.mid_channels,segment_dim=seg_dim)
 
             seg_dim = g2
             input_size = data_size // 2
             dim = self.mid_channels * input_size // seg_dim
-            self.conv2 = MDA_MLP(dim=dim, c_dim= self.mid_channels, len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
+            self.MDA_fast = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
-        else:
+        else:  # Layer 4
 
             seg_dim = g1
             input_size = data_size // 4
             dim = self.mid_channels * input_size // seg_dim
-            self.atten = MDA_MLP(dim=dim, c_dim= self.mid_channels,len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
+            self.MDA_slow = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
             seg_dim = g2
             input_size = data_size // 4
             dim = self.mid_channels * input_size // seg_dim
-            self.conv2 = MDA_MLP(dim=dim, c_dim= self.mid_channels, len_sequence = 10, segment_dim=seg_dim, input_size=input_size)
+            self.MDA_fast = MDA_MLP(dim=dim, c_dim= self.mid_channels, segment_dim=seg_dim)
 
 
         # *******************************************************************
@@ -229,9 +228,8 @@ class MDAUnit(nn.Module):
         out = self.norm1(out)
         out = self.relu(out)
 
-        out2 = self.atten(out)
-        out1 = self.conv2(out)
-
+        out1 = self.MDA_fast(out)
+        out2 = self.MDA_slow(out)
 
         out = self.conv3(torch.cat((out1, out2),dim=1))
 
@@ -380,7 +378,7 @@ class MDATranslator(BaseBackbone):
         self.res_layers = []
         # _in_channels = in_channels
         # _out_channels = in_channels
-        for i, num_blocks in enumerate(self.stage_blocks):  #self.stage_blocks最多等于4
+        for i, num_blocks in enumerate(self.stage_blocks):
             if num_blocks == 0:
                 res_layer = nn.Identity()
             else:

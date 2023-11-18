@@ -76,7 +76,6 @@ class core:
         self.train_loader, self.vali_loader, self.test_loader, self.data_mean, self.data_std = load_data(**config)
         self.vali_loader = self.test_loader if self.vali_loader is None else self.vali_loader
 
-        #在这里获得句柄
 
 
     def _select_optimizer(self):
