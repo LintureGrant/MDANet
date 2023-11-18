@@ -22,7 +22,7 @@ MDANet contains an MLP-like temporal module, presenting a new paradigm for effic
 
 ## Preparation
 
-### Environment install
+### 1. Environment install
 We provide the environment requirements file for easy reproduction:
 ```
   conda create -n MDANet python=3.7
@@ -30,7 +30,7 @@ We provide the environment requirements file for easy reproduction:
 
   pip install -r requirements.txt
 ```
-### Dataset download
+### 2. Dataset download
 
 Our model has been experimented on the following four datasets:
 * [Moving MNIST](http://www.cs.toronto.edu/~nitish/unsupervised_video/)
@@ -45,7 +45,7 @@ We provide a download script for the mm dataset:
   bash download_mmnist.sh 
 ```
 
-### Model traning
+### 3. Model traning
 
 This example provide the detail implimentation on Moving MNIST, you can easliy reproduce our work using the following command:
 
@@ -57,7 +57,11 @@ Please note that __the model traning must strictly adhere to the hyperparameter 
 
 ## Result：
 
-MDANet predicts more accurate actions with less motion blurring compared to other models. Here are some qualitative visualization examples on KTH dataset:
+MDANet predicts more accurate actions with less motion blurring compared to other models. Here are some qualitative visualization examples on the KTH dataset:
+
+
+MDANet
+
 
 ![MDANet](/img/mda.gif "Magic Gardens")
 
