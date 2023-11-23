@@ -63,21 +63,21 @@ MDANet predicts more accurate actions with less motion blurring compared to othe
 MDANet
 
 
-![MDANet](/img/mda.gif "Magic Gardens")
+![MDANet](/img/mda_1.gif "Magic Gardens")
 
 
 SimVP:
 
-![MDANet](/img/simvp.gif "Magic Gardens")
+![MDANet](/img/simvp_a.gif "Magic Gardens")
 
 PredRNNv2:
 
-![MDANet](/img/predv2.gif "Magic Gardens")
+![MDANet](/img/predrnnv2_a.gif "Magic Gardens")
 
 PredRNNv1:
 
-![MDANet](/img/predv1.gif "Magic Gardens")
+![MDANet](/img/predrnnv1_a.gif "Magic Gardens")
 
 ConvLSTM:
 
-![MDANet](/img/convlstm.gif "Magic Gardens")
+![MDANet](/img/convlstm_a.gif "Magic Gardens")
