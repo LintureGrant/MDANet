@@ -39,7 +39,7 @@ Our model has been experimented on the following four datasets:
 * [Human3.6M](http://vision.imar.ro/human3.6m/description.php) 
 * [WeatherBench](https://github.com/pangeo-data/WeatherBench)
 
-We provide a download script for the mm dataset:
+We provide a download script for the Moving MNIST dataset:
 
 ```
   cd ./data/moving_mnist
@@ -48,13 +48,13 @@ We provide a download script for the mm dataset:
 
 ### 3. Model traning
 
-This example provide the detail implimentation on Moving MNIST, you can easliy reproduce our work using the following command:
+This example provide the detail implementation on Moving MNIST, you can easily reproduce our work using the following command:
 
 ```
 conda activate MDANet
 python run.py             
 ```
-Please note that __the model traning must strictly adhere to the hyperparameter settings provided in our paper__; otherwise, reproducibility may not be guaranteed.
+Please note that __the model training must strictly adhere to the hyperparameter settings provided in our paper__; otherwise, reproducibility may not be guaranteed.
 
 ## Result：
 
