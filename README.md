@@ -16,7 +16,7 @@ MDANet contains an MLP-like temporal module, presenting a new paradigm for effic
 
 * `API/` contains dataloaders and metrics.
 * `cls_MD/` is the implement of MD-Translator.
-* `model_MD.py` contains the MDANet model.
+* `MDAModel.py` contains the MDANet model.
 * `run.py` is the executable python file with possible arguments.
 * `core.py` is the core file for training, validating, and testing. 
 * `param.py` is the parameter configuration.
