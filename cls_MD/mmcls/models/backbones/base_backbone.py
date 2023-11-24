@@ -14,7 +14,7 @@ class BaseBackbone(BaseModule, metaclass=ABCMeta):
         super(BaseBackbone, self).__init__(init_cfg)
 
     @abstractmethod
-    def forward(self, x, enc1, enc2, enc3):
+    def forward(self, x):
         """Forward computation.
         Args:
             x (tensor | tuple[tensor]): x could be a Torch.tensor or a tuple of

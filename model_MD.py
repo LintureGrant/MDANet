@@ -1,9 +1,6 @@
-import torch
 from torch import nn
 from modules_MD import ConvSC
-from cls_MD.mmcls.models.backbones import MDATranslator
-
-import torch.nn.functional as F
+from cls_MD.mmcls.models.backbones import TModule
 
 
 def stride_generator(N, reverse=False):  
@@ -65,16 +62,17 @@ class Decoder(nn.Module):
         return Y
 
 
-class MDAT(nn.Module):
+class MDATranslator(nn.Module):
     def __init__(self, in_channel, layer_num, data_size, g1, g2, reduction=8, layer_config=(2, 8, 2, 8)):
-        super(MDAT, self).__init__()
-        self.net = MDATranslator(layers=layer_num,
-                                 layer_config=layer_config,
-                                 in_channels=in_channel,
-                                 reduction=reduction,
-                                 data_size=data_size,
-                                 g1=g1,
-                                 g2=g2).to("cuda")
+        super(MDATranslator, self).__init__()
+        self.net = TModule(layer=layer_num,
+                           layer_config=layer_config,
+                           in_channels=in_channel,
+                           reduction=reduction,
+                           data_size=data_size,
+                           g1=g1,
+                           g2=g2,
+                           backbone='MDAUnit').to("cuda")
         self.in_channel = in_channel
 
     def forward(self, x):
@@ -92,8 +90,15 @@ class MDAT(nn.Module):
 
 
 class MDANet(nn.Module):
-    def __init__(self, shape_in, shape_out, hid_channel=64, layer_num=4, kernel_size=(3, 3, 3, 3),
-                 layer_config=(1, 8, 2, 8), reduction=8, group_param=(2, 4)):
+    def __init__(self,
+                 shape_in,
+                 shape_out,
+                 hid_channel=64,
+                 layer_num=4,
+                 kernel_size=(3, 3, 3, 3),
+                 layer_config=(1, 8, 2, 8),
+                 reduction=8,
+                 group_param=(2, 4)):
         super(MDANet, self).__init__()
 
         T, C, H, W = shape_in
@@ -102,13 +107,13 @@ class MDANet(nn.Module):
 
         self.enc = Encoder(C, hid_channel, layer_num, kernel_size)
 
-        self.MDTranslator = MDAT(in_channel=T * hid_channel,
-                                 layer_num=layer_num,
-                                 reduction=reduction,
-                                 data_size=H,
-                                 g1=group_param[0],
-                                 g2=group_param[1],
-                                 layer_config=layer_config)
+        self.MDTranslator = MDATranslator(in_channel=T * hid_channel,
+                                          layer_num=layer_num,
+                                          reduction=reduction,
+                                          data_size=H,
+                                          g1=group_param[0],
+                                          g2=group_param[1],
+                                          layer_config=layer_config)
 
         self.dec = Decoder(hid_channel, self.C_out, T, self.T_out, layer_num, kernel_size)
 

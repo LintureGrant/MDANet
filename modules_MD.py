@@ -34,23 +34,3 @@ class ConvSC(nn.Module):
     def forward(self, x):
         y = self.conv(x)
         return y
-
-
-class GroupConv2d(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, groups, act_norm=False):
-        super(GroupConv2d, self).__init__()
-        self.act_norm = act_norm
-        if in_channels % groups != 0:
-            groups = 1
-
-        self.conv2 = nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size, stride=stride, padding=padding,
-                               groups=groups)
-        self.norm = nn.GroupNorm(groups, out_channels)  # 第一维度为Channel，后面的维度为特征数据。
-        self.activate = nn.LeakyReLU(0.2, inplace=True)
-
-    def forward(self, x):
-        y = self.conv2(x)
-        # y = self.conv2(y)
-        if self.act_norm:
-            y = self.activate(self.norm(y))
-        return y

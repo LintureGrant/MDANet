@@ -28,7 +28,7 @@ def create_parser():
     # # MD-Translator
     parser.add_argument('--reduction', default=2, type=int)
     parser.add_argument('--layer_config', default=(1, 8, 2, 8), type=int)
-    parser.add_argument('--group_param', default=(2, 4), type=int)
+    parser.add_argument('--group_param', default=(4, 8), type=int)
 
     # Training parameters
     parser.add_argument('--epochs', default=2001, type=int)
