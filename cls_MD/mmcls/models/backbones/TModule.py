@@ -10,9 +10,6 @@ from timm.models.layers import DropPath, trunc_normal_
 import math
 
 
-def softmax(x):
-    e_x = np.exp((x-torch.max(x)).detach().numpy())# 防溢出
-    return e_x/e_x.sum(0)
 
 class Mlp(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.ReLU, drop=0.):
