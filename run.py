@@ -9,7 +9,7 @@ date: Nov. 18, 2023.
 
 """
 
-from core import core
+from core import Core
 
 import warnings
 import param
@@ -19,7 +19,7 @@ warnings.filterwarnings('ignore')
 if __name__ == '__main__':
     args = param.create_parser().parse_args()
     config = args.__dict__
-    core = core(args)
+    core = Core(args)
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>>  start <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
     core.train(args)
     print('>>>>>>>>>>>>>>>>>>>>>>>>>>>> testing <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')

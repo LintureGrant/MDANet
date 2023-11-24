@@ -1,7 +1,7 @@
 import os
 import os.path as osp
 import json
-from model_MD import MDANet
+from MDAModel import MDANet
 from tqdm import tqdm
 from API import *
 from utils import *
@@ -9,9 +9,9 @@ from thop import profile
 import torch.distributed
 from torch import optim
 
-class core:
+class Core:
     def __init__(self, args):
-        super(core, self).__init__()
+        super(Core, self).__init__()
         self.args = args
         self.config = self.args.__dict__
         self.device = self._acquire_device()
@@ -169,13 +169,10 @@ class core:
 
     def test(self, args):
         self.model.eval()
-        count=0
         inputs_lst, trues_lst, preds_lst = [], [], []
         for batch_x, batch_y in self.test_loader:
-            print(count)
             pred_y = self.model(batch_x.to(self.device))
             loss = self.criterion(pred_y.to(self.device), batch_y.to(self.device))
-            print(loss.item()*64*64)
             list(map(lambda data, lst: lst.append(data.detach().cpu().numpy()), [
                  batch_x, batch_y, pred_y], [inputs_lst, trues_lst, preds_lst]))
 

@@ -1,5 +1,5 @@
 from torch import nn
-from modules_MD import ConvSC
+from MDAModules import ConvSC
 from cls_MD.mmcls.models.backbones import TModule
 
 
