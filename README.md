@@ -1,7 +1,7 @@
 # Motion Direction Awareness: A Biomimetic Dynamic Capture Mechanism for Video Prediction
 ![GitHub stars](https://img.shields.io/github/stars/LintureGrant/MDANet)  ![GitHub forks](https://img.shields.io/github/forks/LintureGrant/MDANet?color=green) 
 
-This repository contains the implementation code for paper:
+This repository contains the implementation code for the paper:
 
 __Motion Direction Awareness: A Biomimetic Dynamic Capture Mechanism for Video Prediction__
 
