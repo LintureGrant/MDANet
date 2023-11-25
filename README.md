@@ -7,12 +7,12 @@ __Motion Direction Awareness: A Biomimetic Dynamic Capture Mechanism for Video P
 
 ## Introduction
 
-![MDANet](/img/overview.png)
+![MDANet](/img/overview.png "The overall framework of MDANet")
 
 
 MDANet contains an MLP-like temporal module, presenting a new paradigm for efficient video prediction. 
 
-## Over view
+## Overview
 
 * `API/` contains dataloaders and metrics.
 * `cls_MD/` is the implement of MD-Translator.
@@ -64,21 +64,21 @@ MDANet predicts more accurate actions with less motion blurring compared to othe
 MDANet
 
 
-![MDANet](/img/mda_1.gif "Magic Gardens")
+![MDANet](/img/mda_1.gif "MDANet")
 
 
 SimVP:
 
-![MDANet](/img/simvp_a.gif "Magic Gardens")
+![SimVP](/img/simvp_a.gif "SimVP")
 
 PredRNNv2:
 
-![MDANet](/img/predrnnv2_a.gif "Magic Gardens")
+![PredRNNv2](/img/predrnnv2_a.gif "PredRNNv2")
 
 PredRNNv1:
 
-![MDANet](/img/predrnnv1_a.gif "Magic Gardens")
+![PredRNNv1](/img/predrnnv1_a.gif "PredRNNv1")
 
 ConvLSTM:
 
-![MDANet](/img/convlstm_a.gif "Magic Gardens")
+![ConvLSTM](/img/convlstm_a.gif "ConvLSTM")
